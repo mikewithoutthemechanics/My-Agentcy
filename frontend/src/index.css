@@ -51,59 +51,15 @@
   }
 
   .card-hover {
-    @apply card transition-all duration-200 hover:border-accent-dim hover:shadow-lg hover:shadow-black/20;
+    @apply bg-surface rounded-xl border border-surface-lighter p-6 transition-all duration-200;
   }
 
-  .btn {
-    @apply px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2;
-  }
-
-  .btn-primary {
-    @apply btn bg-accent text-background hover:bg-accent-bright;
-  }
-
-  .btn-secondary {
-    @apply btn bg-surface-light text-accent-bright hover:bg-surface-lighter;
-  }
-
-  .btn-ghost {
-    @apply btn text-accent hover:bg-surface-light hover:text-white;
-  }
-
-  .btn-danger {
-    @apply btn bg-error/20 text-error hover:bg-error/30;
-  }
-
-  .btn-success {
-    @apply btn bg-success/20 text-success hover:bg-success/30;
+  .card-hover:hover {
+    @apply border-accent-dim shadow-lg shadow-black/20;
   }
 
   .input {
     @apply w-full px-4 py-2.5 bg-surface-light border border-surface-lighter rounded-lg text-white placeholder:text-accent-dim focus:outline-none focus:border-accent transition-colors;
-  }
-
-  .badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
-  }
-
-  .badge-success {
-    @apply badge bg-success/20 text-success;
-  }
-
-  .badge-warning {
-    @apply badge bg-warning/20 text-warning;
-  }
-
-  .badge-error {
-    @apply badge bg-error/20 text-error;
-  }
-
-  .badge-info {
-    @apply badge bg-info/20 text-info;
-  }
-
-  .badge-neutral {
-    @apply badge bg-surface-lighter text-accent;
   }
 
   .stat-value {

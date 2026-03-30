@@ -1,120 +1,104 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { BrowserRouter, Routes, Route, NavLink, Navigate } from 'react-router-dom'
+import { motion } from 'framer-motion'
+import {
+  LayoutDashboard,
+  ListTodo,
+  ShieldCheck,
+  Bot,
+  CreditCard,
+  Settings,
+  ChevronRight,
+  Zap,
+} from 'lucide-react'
+import Dashboard from './pages/Dashboard'
+import Tasks from './pages/Tasks'
+import QAReview from './pages/QAReview'
+import Agents from './pages/Agents'
+import Billing from './pages/Billing'
+import SettingsPage from './pages/Settings'
+import './index.css'
+
+const navItems = [
+  { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+  { to: '/tasks', icon: ListTodo, label: 'Tasks' },
+  { to: '/qa', icon: ShieldCheck, label: 'QA Review' },
+  { to: '/agents', icon: Bot, label: 'Agents' },
+  { to: '/billing', icon: CreditCard, label: 'Billing' },
+  { to: '/settings', icon: Settings, label: 'Settings' },
+]
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <BrowserRouter>
+      <div className="flex h-screen bg-[#0D0D12] text-white">
+        {/* Sidebar */}
+        <aside className="w-64 border-r border-white/5 flex flex-col">
+          {/* Logo */}
+          <div className="p-6 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-[#C0C0C0]/10 flex items-center justify-center">
+              <Zap className="w-4 h-4 text-[#C0C0C0]" />
+            </div>
+            <div>
+              <h1 className="text-sm font-semibold tracking-tight">My-Agentcy</h1>
+              <p className="text-[10px] text-white/30 uppercase tracking-widest">AI Workforce</p>
+            </div>
+          </div>
 
-      <div className="ticks"></div>
+          {/* Nav */}
+          <nav className="flex-1 px-3 py-4 space-y-1">
+            {navItems.map(({ to, icon: Icon, label }) => (
+              <NavLink
+                key={to}
+                to={to}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
+                    isActive
+                      ? 'bg-white/5 text-white'
+                      : 'text-white/40 hover:text-white/70 hover:bg-white/[0.02]'
+                  }`
+                }
+              >
+                <Icon className="w-4 h-4" />
+                <span>{label}</span>
+                <ChevronRight className="w-3 h-3 ml-auto opacity-0 group-hover:opacity-50" />
+              </NavLink>
+            ))}
+          </nav>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+          {/* Footer */}
+          <div className="p-4 border-t border-white/5">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-[#C0C0C0]/10 flex items-center justify-center text-xs font-medium text-[#C0C0C0]">
+                MK
+              </div>
+              <div>
+                <p className="text-xs font-medium">Michael Kidd</p>
+                <p className="text-[10px] text-white/30">Agentcy.co.za</p>
+              </div>
+            </div>
+          </div>
+        </aside>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+        {/* Main Content */}
+        <main className="flex-1 overflow-auto">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="p-8"
+          >
+            <Routes>
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/tasks" element={<Tasks />} />
+              <Route path="/qa" element={<QAReview />} />
+              <Route path="/agents" element={<Agents />} />
+              <Route path="/billing" element={<Billing />} />
+              <Route path="/settings" element={<SettingsPage />} />
+            </Routes>
+          </motion.div>
+        </main>
+      </div>
+    </BrowserRouter>
   )
 }
 

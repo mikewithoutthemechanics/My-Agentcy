@@ -1,5 +1,4 @@
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'success';
@@ -31,11 +30,9 @@ export default function Button({
   ...props
 }: ButtonProps) {
   return (
-    <motion.button
-      whileHover={{ scale: disabled ? 1 : 1.02 }}
-      whileTap={{ scale: disabled ? 1 : 0.98 }}
+    <button
       className={cn(
-        'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors',
+        'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all duration-200',
         variantClasses[variant],
         sizeClasses[size],
         (disabled || loading) && 'opacity-50 cursor-not-allowed',
@@ -51,6 +48,6 @@ export default function Button({
         </svg>
       )}
       {children}
-    </motion.button>
+    </button>
   );
 }
