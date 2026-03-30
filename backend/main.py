@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
 from api.routes import tasks, agents, qa, billing, feedback, dashboard
+from websocket import router as ws_router
 
 
 @asynccontextmanager
@@ -42,6 +43,7 @@ app.include_router(qa.router, prefix="/api/qa", tags=["QA"])
 app.include_router(billing.router, prefix="/api/billing", tags=["Billing"])
 app.include_router(feedback.router, prefix="/api/feedback", tags=["Feedback"])
 app.include_router(dashboard.router, prefix="/api/dashboard", tags=["Dashboard"])
+app.include_router(ws_router, tags=["WebSocket"])
 
 
 @app.get("/health")
