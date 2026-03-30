@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { DollarSign, TrendingUp, TrendingDown, FileText } from 'lucide-react'
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 
 const costBreakdown = [
   { agent: 'Analyst', tokens: '124K', cost: '$3.10', tasks: 12, perTask: '$0.26' },
@@ -24,26 +25,13 @@ const statusColors: Record<string, string> = {
   overdue: 'bg-red-500/10 text-red-400',
 }
 
-// Simple bar chart using divs
-function CostChart() {
-  const data = [45, 62, 38, 71, 55, 82, 48, 65, 73, 58, 90, 72, 68, 85]
-  const max = Math.max(...data)
-
-  return (
-    <div className="flex items-end gap-1 h-24">
-      {data.map((v, i) => (
-        <motion.div
-          key={i}
-          initial={{ height: 0 }}
-          animate={{ height: `${(v / max) * 100}%` }}
-          transition={{ delay: i * 0.03, duration: 0.4 }}
-          className="flex-1 rounded-sm bg-[#C0C0C0]/20 hover:bg-[#C0C0C0]/40 transition-colors"
-          title={`Day ${i + 1}: $${v}`}
-        />
-      ))}
-    </div>
-  )
-}
+const dailyCosts = [
+  { day: '1', cost: 45 }, { day: '2', cost: 62 }, { day: '3', cost: 38 },
+  { day: '4', cost: 71 }, { day: '5', cost: 55 }, { day: '6', cost: 82 },
+  { day: '7', cost: 48 }, { day: '8', cost: 65 }, { day: '9', cost: 73 },
+  { day: '10', cost: 58 }, { day: '11', cost: 90 }, { day: '12', cost: 72 },
+  { day: '13', cost: 68 }, { day: '14', cost: 85 },
+]
 
 export default function Billing() {
   const totalCost = costBreakdown.reduce((sum, a) => sum + parseFloat(a.cost.replace('$', '')), 0)
@@ -125,7 +113,14 @@ export default function Billing() {
               <h3 className="text-xs text-white/50 uppercase tracking-wider">Daily Cost (Last 14 Days)</h3>
               <span className="text-xs text-[#4ADE80]">↓ trending down</span>
             </div>
-            <CostChart />
+            <ResponsiveContainer width="100%" height={96}>
+              <BarChart data={dailyCosts}>
+                <XAxis dataKey="day" tick={{ fill: '#666', fontSize: 9 }} axisLine={false} tickLine={false} />
+                <YAxis hide />
+                <Tooltip contentStyle={{ background: '#1A1A2E', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, fontSize: 11 }} />
+                <Bar dataKey="cost" fill="#C0C0C0" radius={[2, 2, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
 

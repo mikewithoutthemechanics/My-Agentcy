@@ -11,6 +11,7 @@ import {
   CheckCircle2,
   Timer,
 } from 'lucide-react'
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts'
 import StatCard from '../components/ui/StatCard'
 
 const stats = [
@@ -18,8 +19,8 @@ const stats = [
   { title: 'Avg Delivery', value: '4.2h', change: -18, changeLabel: 'vs last week', icon: Clock, iconColor: 'text-[#4ADE80]' },
   { title: 'QA Pass Rate', value: '94%', change: 2, changeLabel: 'vs last week', icon: ShieldCheck, iconColor: 'text-[#60A5FA]' },
   { title: 'Satisfaction', value: '4.7', change: undefined, changeLabel: '★ average', icon: Heart, iconColor: 'text-[#F472B6]' },
-  { title: 'Cost per Task', value: '$2.40', change: -12, changeLabel: 'vs last month', icon: DollarSign, iconColor: 'text-[#FBBF24]' },
-  { title: 'Revenue Today', value: '$847', change: undefined, changeLabel: '8 tasks', icon: TrendingUp, iconColor: 'text-[#34D399]' },
+  { title: 'Cost/Task', value: '$2.40', change: -12, changeLabel: 'vs last month', icon: DollarSign, iconColor: 'text-[#FBBF24]' },
+  { title: 'Revenue', value: '$847', change: undefined, changeLabel: '8 tasks', icon: TrendingUp, iconColor: 'text-[#34D399]' },
 ]
 
 const recentTasks = [
@@ -46,10 +47,25 @@ const statusColors: Record<string, string> = {
   completed: 'bg-green-500/10 text-green-400',
 }
 
+// Cost trend data
+const costTrend = [
+  { day: 'Mon', cost: 45 }, { day: 'Tue', cost: 62 }, { day: 'Wed', cost: 38 },
+  { day: 'Thu', cost: 71 }, { day: 'Fri', cost: 55 }, { day: 'Sat', cost: 82 },
+  { day: 'Sun', cost: 48 }, { day: 'Mon', cost: 65 }, { day: 'Tue', cost: 73 },
+  { day: 'Wed', cost: 58 }, { day: 'Thu', cost: 90 }, { day: 'Fri', cost: 72 },
+  { day: 'Sat', cost: 68 }, { day: 'Sun', cost: 85 },
+]
+
+// Task distribution by type
+const taskDistribution = [
+  { type: 'Report', count: 24 }, { type: 'Analysis', count: 18 },
+  { type: 'Content', count: 15 }, { type: 'Code', count: 12 },
+  { type: 'Research', count: 8 },
+]
+
 export default function Dashboard() {
   return (
     <div>
-      {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
         <p className="text-white/40 text-sm mt-1">AI Workforce overview — real-time metrics</p>
@@ -58,15 +74,45 @@ export default function Dashboard() {
       {/* Stats Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-8">
         {stats.map((stat, i) => (
-          <motion.div
-            key={stat.title}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.05 }}
-          >
+          <motion.div key={stat.title} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
             <StatCard {...stat} />
           </motion.div>
         ))}
+      </div>
+
+      {/* Charts Row */}
+      <div className="grid lg:grid-cols-2 gap-6 mb-6">
+        {/* Cost Trend */}
+        <div className="bg-white/[0.02] rounded-xl border border-white/5 p-6">
+          <h2 className="text-sm font-semibold mb-4">Cost Trend (14 days)</h2>
+          <ResponsiveContainer width="100%" height={200}>
+            <AreaChart data={costTrend}>
+              <defs>
+                <linearGradient id="costGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#C0C0C0" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#C0C0C0" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <XAxis dataKey="day" tick={{ fill: '#666', fontSize: 10 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: '#666', fontSize: 10 }} axisLine={false} tickLine={false} />
+              <Tooltip contentStyle={{ background: '#1A1A2E', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, fontSize: 12 }} />
+              <Area type="monotone" dataKey="cost" stroke="#C0C0C0" fillOpacity={1} fill="url(#costGrad)" strokeWidth={2} />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Task Distribution */}
+        <div className="bg-white/[0.02] rounded-xl border border-white/5 p-6">
+          <h2 className="text-sm font-semibold mb-4">Tasks by Type</h2>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={taskDistribution}>
+              <XAxis dataKey="type" tick={{ fill: '#666', fontSize: 10 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: '#666', fontSize: 10 }} axisLine={false} tickLine={false} />
+              <Tooltip contentStyle={{ background: '#1A1A2E', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, fontSize: 12 }} />
+              <Bar dataKey="count" fill="#C0C0C0" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
@@ -98,16 +144,13 @@ export default function Dashboard() {
                 <div className={`w-2 h-2 rounded-full ${agent.status === 'active' ? 'bg-green-400 animate-pulse' : 'bg-white/20'}`} />
                 <div className="flex-1">
                   <p className="text-sm font-medium">{agent.name}</p>
-                  <p className="text-xs text-white/30">
-                    {agent.tasks} active · avg score {agent.avgScore}
-                  </p>
+                  <p className="text-xs text-white/30">{agent.tasks} active · avg score {agent.avgScore}</p>
                 </div>
                 <Bot className="w-4 h-4 text-white/20" />
               </div>
             ))}
           </div>
 
-          {/* QA Insights */}
           <div className="mt-6 pt-6 border-t border-white/5">
             <h3 className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-3">QA Insights</h3>
             <div className="space-y-2">

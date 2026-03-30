@@ -1,7 +1,7 @@
-"""
-My-Agentcy Frontend — API Service Layer
-Connects React app to FastAPI backend.
-"""
+/**
+ * My-Agentcy Frontend — API Service Layer
+ * Connects React app to FastAPI backend.
+ */
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
