@@ -216,7 +216,7 @@ function TestimonialCarousel() {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
               <p style={{ fontSize: 15, fontWeight: 600 }}>{testimonials[current].name}</p>
-              <p style={{ fontSize: 13, color: '#8A8A8A' }}>{testimonials[current].role}</p>
+              <p style={{ fontSize: 13, color: '#555' }}>{testimonials[current].role}</p>
             </div>
             <div style={{ display: 'flex', gap: 2 }}>
               {[...Array(5)].map((_, i) => <Star key={i} size={16} color="#FF6B6B" fill="#FF6B6B" />)}
@@ -288,7 +288,7 @@ function DashboardMockup() {
         <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#F2CC8F' }} />
         <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#4A7C28' }} />
         <div style={{ marginLeft: 12, flex: 1, borderRadius: 6, height: 20, display: 'flex', alignItems: 'center', padding: '0 10px', background: '#EEEEEC' }}>
-          <span style={{ fontSize: 10, color: '#8A8A8A' }}>my-agentcy.vercel.app/app</span>
+          <span style={{ fontSize: 10, color: '#999' }}>my-agentcy.vercel.app/app</span>
         </div>
       </div>
       {/* Content */}
@@ -310,7 +310,7 @@ function DashboardMockup() {
                 <motion.div animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
                   style={{ width: 6, height: 6, borderRadius: '50%', background: s.color, boxShadow: `0 0 8px ${s.color}` }} />
                 <s.icon size={12} color={s.color} />
-                <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{s.label}</span>
+                <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{s.label}</span>
               </div>
               <p style={{ fontSize: 20, fontWeight: 700, color: '#fff' }}>{s.value}</p>
             </motion.div>
@@ -330,7 +330,7 @@ function DashboardMockup() {
         {/* Typing indicator */}
         <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
           <TypingIndicator />
-          <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.2)' }}>Analyst agent is working...</span>
+          <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)' }}>Analyst agent is working...</span>
         </div>
       </div>
     </div>
@@ -475,7 +475,7 @@ export default function Landing() {
           </motion.h1>
 
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.8 }}
-            style={{ fontSize: 'clamp(16px, 2vw, 20px)', lineHeight: 1.6, color: 'rgba(255,255,255,0.6)', maxWidth: 520, margin: '0 auto 40px' }}>
+            style={{ fontSize: 'clamp(16px, 2vw, 20px)', lineHeight: 1.6, color: 'rgba(255,255,255,0.75)', maxWidth: 520, margin: '0 auto 40px' }}>
             AI agent teams that deliver real work. Every deliverable quality-checked.
           </motion.p>
 
@@ -499,7 +499,7 @@ export default function Landing() {
             <div style={{ width: 1, height: 20, background: 'rgba(255,255,255,0.1)' }} />
             <div>
               <div style={{ display: 'flex', gap: 2 }}>{[...Array(5)].map((_, i) => <Star key={i} size={14} color="#FF6B6B" fill="#FF6B6B" />)}</div>
-              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', marginTop: 2 }}>50+ businesses across South Africa</p>
+              <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginTop: 2 }}>50+ businesses across South Africa</p>
             </div>
           </motion.div>
         </motion.div>
@@ -521,7 +521,7 @@ export default function Landing() {
               <p style={{ fontSize: 'clamp(36px, 5vw, 56px)', fontFamily: "'Space Grotesk', 'Inter', sans-serif", fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1 }}>
                 <AnimatedCounter target={s.value} suffix={s.suffix} />
               </p>
-              <p style={{ fontSize: 13, color: '#8A8A8A', marginTop: 8 }}>{s.label}</p>
+              <p style={{ fontSize: 13, color: '#555', marginTop: 8 }}>{s.label}</p>
             </motion.div>
           ))}
         </div>
@@ -531,7 +531,7 @@ export default function Landing() {
       <section id="how-it-works" style={{ padding: '96px 24px' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 64 }}>
-            <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} style={{ display: 'block', fontSize: 11, fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#8A8A8A', marginBottom: 12 }}>The process</motion.span>
+            <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} style={{ display: 'block', fontSize: 11, fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#666', marginBottom: 12 }}>The process</motion.span>
             <motion.h2 initial={{ opacity: 0, clipPath: 'inset(100% 0 0 0)' }} whileInView={{ opacity: 1, clipPath: 'inset(0% 0 0 0)' }} viewport={{ once: true }} transition={{ duration: 0.8, ease }}
               style={{ fontSize: 'clamp(36px, 6vw, 64px)', fontFamily: "'Space Grotesk', 'Inter', sans-serif", fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 0.95 }}>
               How it <span style={{ color: '#FF6B6B' }}>works</span>
@@ -564,7 +564,7 @@ export default function Landing() {
       <section id="features" style={{ padding: '96px 24px', background: '#1A1A2E' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 64 }}>
-            <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} style={{ display: 'block', fontSize: 11, fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 12 }}>The difference</motion.span>
+            <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} style={{ display: 'block', fontSize: 11, fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 12 }}>The difference</motion.span>
             <motion.h2 initial={{ opacity: 0, clipPath: 'inset(100% 0 0 0)' }} whileInView={{ opacity: 1, clipPath: 'inset(0% 0 0 0)' }} viewport={{ once: true }} transition={{ duration: 0.8, ease }}
               style={{ fontSize: 'clamp(36px, 6vw, 64px)', fontFamily: "'Space Grotesk', 'Inter', sans-serif", fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 0.95, color: '#fff' }}>
               Not just AI.<br /><span style={{ color: '#FF6B6B' }}>Guaranteed quality.</span>
@@ -584,7 +584,7 @@ export default function Landing() {
                   <f.icon size={20} color="#FF6B6B" />
                 </div>
                 <h3 style={{ fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 8 }}>{f.title}</h3>
-                <p style={{ fontSize: 14, lineHeight: 1.6, color: 'rgba(255,255,255,0.4)' }}>{f.desc}</p>
+                <p style={{ fontSize: 14, lineHeight: 1.6, color: 'rgba(255,255,255,0.6)' }}>{f.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -595,7 +595,7 @@ export default function Landing() {
       <section style={{ padding: '96px 24px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
-            <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} style={{ display: 'block', fontSize: 11, fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#8A8A8A', marginBottom: 12 }}>Your command center</motion.span>
+            <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} style={{ display: 'block', fontSize: 11, fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#666', marginBottom: 12 }}>Your command center</motion.span>
             <motion.h2 initial={{ opacity: 0, clipPath: 'inset(100% 0 0 0)' }} whileInView={{ opacity: 1, clipPath: 'inset(0% 0 0 0)' }} viewport={{ once: true }} transition={{ duration: 0.8, ease }}
               style={{ fontSize: 'clamp(28px, 5vw, 48px)', fontFamily: "'Space Grotesk', 'Inter', sans-serif", fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.05 }}>
               See everything. Control everything.
@@ -611,7 +611,7 @@ export default function Landing() {
       <section id="pricing" style={{ padding: '96px 24px', background: '#F7F7F5' }}>
         <div style={{ maxWidth: 1000, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 64 }}>
-            <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} style={{ display: 'block', fontSize: 11, fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#8A8A8A', marginBottom: 12 }}>Simple pricing</motion.span>
+            <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} style={{ display: 'block', fontSize: 11, fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#666', marginBottom: 12 }}>Simple pricing</motion.span>
             <motion.h2 initial={{ opacity: 0, clipPath: 'inset(100% 0 0 0)' }} whileInView={{ opacity: 1, clipPath: 'inset(0% 0 0 0)' }} viewport={{ once: true }} transition={{ duration: 0.8, ease }}
               style={{ fontSize: 'clamp(36px, 6vw, 64px)', fontFamily: "'Space Grotesk', 'Inter', sans-serif", fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 0.95 }}>
               Plans that <span style={{ color: '#FF6B6B' }}>scale</span>
@@ -679,7 +679,7 @@ export default function Landing() {
             style={{ fontSize: 'clamp(36px, 6vw, 64px)', fontFamily: "'Space Grotesk', 'Inter', sans-serif", fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 0.95, color: '#fff', marginBottom: 24 }}>
             Ready to scale?
           </motion.h2>
-          <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} style={{ fontSize: 18, color: 'rgba(255,255,255,0.4)', marginBottom: 40 }}>
+          <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} style={{ fontSize: 18, color: 'rgba(255,255,255,0.6)', marginBottom: 40 }}>
             Your AI team is waiting. Start with a free task today.
           </motion.p>
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
@@ -696,17 +696,17 @@ export default function Landing() {
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <Zap size={16} color="#8A8A8A" />
-            <span style={{ fontSize: 14, color: '#8A8A8A' }}>My-Agentcy by Agentcy.co.za</span>
+            <span style={{ fontSize: 14, color: '#666' }}>My-Agentcy by Agentcy.co.za</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             {[Globe, Mail, Zap].map((Icon, i) => (
               <motion.a key={i} href="#" whileHover={{ y: -3, rotate: 5 }} whileTap={{ scale: 0.9 }}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, borderRadius: '50%', background: '#F7F7F5', color: '#8A8A8A', transition: 'color 0.2s' }}>
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, borderRadius: '50%', background: '#F7F7F5', color: '#666', transition: 'color 0.2s' }}>
                 <Icon size={14} />
               </motion.a>
             ))}
           </div>
-          <p style={{ fontSize: 12, color: '#ABABAB' }}>Leaders in Software. Experts in Intelligence.</p>
+          <p style={{ fontSize: 12, color: '#666' }}>Leaders in Software. Experts in Intelligence.</p>
         </div>
       </footer>
 
