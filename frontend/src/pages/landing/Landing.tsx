@@ -22,6 +22,14 @@ const globalStyles = `
   0% { background-position: -200% center; }
   100% { background-position: 200% center; }
 }
+.hero-cta-glow:hover {
+  box-shadow: 0 8px 40px rgba(255,107,107,0.5), 0 0 60px rgba(255,107,107,0.15);
+  transform: translateY(-2px);
+}
+.hero-cta-outline:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.5);
+}
 @keyframes bounce3 {
   0%, 80%, 100% { transform: translateY(0); }
   40% { transform: translateY(-6px); }
@@ -299,6 +307,8 @@ function DashboardMockup() {
               style={{ borderRadius: 12, padding: 12, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+                <motion.div animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
+                  style={{ width: 6, height: 6, borderRadius: '50%', background: s.color, boxShadow: `0 0 8px ${s.color}` }} />
                 <s.icon size={12} color={s.color} />
                 <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{s.label}</span>
               </div>
@@ -409,11 +419,11 @@ export default function Landing() {
         </Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: 28 }} className="nav-links-desktop">
           {['How it works', 'Features', 'Pricing'].map(t => (
-            <a key={t} href={`#${t.toLowerCase().replace(/ /g, '-')}`} style={{ fontSize: 14, textDecoration: 'none', color: onHero ? 'rgba(255,255,255,0.7)' : '#6B6B6B', transition: 'color 0.3s' }}>{t}</a>
+            <a key={t} href={`#${t.toLowerCase().replace(/ /g, '-')}`} className="nav-link-hover" style={{ fontSize: 14, textDecoration: 'none', color: onHero ? 'rgba(255,255,255,0.7)' : '#6B6B6B', transition: 'color 0.3s' }}>{t}</a>
           ))}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <Link to="/auth/login" style={{ fontSize: 14, textDecoration: 'none', color: onHero ? 'rgba(255,255,255,0.7)' : '#6B6B6B', transition: 'color 0.3s' }} className="nav-links-desktop">Sign in</Link>
+          <Link to="/auth/login" style={{ fontSize: 14, textDecoration: 'none', color: onHero ? 'rgba(255,255,255,0.7)' : '#6B6B6B', transition: 'color 0.3s' }} className="nav-links-desktop nav-link-hover">Sign in</Link>
           <Link to="/auth/signup" style={{ padding: '10px 20px', borderRadius: 100, fontSize: 13, fontWeight: 600, textDecoration: 'none', color: '#fff', background: onHero ? '#FF6B6B' : '#1A1A2E', boxShadow: onHero ? '0 4px 20px rgba(255,107,107,0.3)' : 'none', transition: 'all 0.3s' }}>Start free →</Link>
         </div>
       </nav>
@@ -470,10 +480,10 @@ export default function Landing() {
           </motion.p>
 
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 16 }}>
-            <Link to="/auth/signup" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '16px 32px', borderRadius: 100, background: '#FF6B6B', color: '#fff', fontSize: 15, fontWeight: 600, textDecoration: 'none', boxShadow: '0 8px 30px rgba(255,107,107,0.3)' }}>
+            <Link to="/auth/signup" className="btn-press hero-cta-glow" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '16px 32px', borderRadius: 100, background: '#FF6B6B', color: '#fff', fontSize: 15, fontWeight: 600, textDecoration: 'none', boxShadow: '0 8px 30px rgba(255,107,107,0.3)', transition: 'transform 0.15s, box-shadow 0.3s' }}>
               Start free, no card needed <ArrowRight size={16} />
             </Link>
-            <a href="#how-it-works" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '16px 32px', borderRadius: 100, background: 'transparent', color: 'rgba(255,255,255,0.8)', fontSize: 15, fontWeight: 500, textDecoration: 'none', border: '1.5px solid rgba(255,255,255,0.25)' }}>
+            <a href="#how-it-works" className="btn-press hero-cta-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '16px 32px', borderRadius: 100, background: 'transparent', color: 'rgba(255,255,255,0.8)', fontSize: 15, fontWeight: 500, textDecoration: 'none', border: '1.5px solid rgba(255,255,255,0.25)', transition: 'transform 0.15s, border-color 0.3s, background 0.3s' }}>
               <Play size={16} /> See how it works
             </a>
           </motion.div>
@@ -498,7 +508,8 @@ export default function Landing() {
       </section>
 
       {/* ━━ STATS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      <section style={{ padding: '80px 24px', background: '#fff' }}>
+      <section style={{ padding: '80px 24px', background: '#fff', position: 'relative' }}>
+        <div style={{ position: 'absolute', top: 0, left: '10%', right: '10%', height: 1, background: 'linear-gradient(90deg, transparent, #E5E5E5, transparent)' }} />
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 32, textAlign: 'center' }}>
           {[
             { value: 847, suffix: '+', label: 'Tasks completed' },
@@ -533,10 +544,11 @@ export default function Landing() {
               { step: '03', title: 'QA Review', desc: 'Automated scoring + human review. Every output quality-checked.', icon: Shield },
               { step: '04', title: 'Deliver', desc: 'Polished work delivered. Approve or request unlimited revisions.', icon: CheckCircle2 },
             ].map((s, i) => (
-              <motion.div key={s.step} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.12, duration: 0.6 }}>
+              <motion.div key={s.step} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.12, duration: 0.6 }}
+                whileHover={{ y: -8 }} style={{ transition: 'transform 0.3s' }}>
                 <TiltCard>
-                  <div style={{ aspectRatio: '1', borderRadius: 24, overflow: 'hidden', position: 'relative', background: 'linear-gradient(145deg, #f5f5f3, #ebebe9)', marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-                    <s.icon size={48} color="#1A1A2E" style={{ opacity: 0.1 }} />
+                  <div style={{ aspectRatio: '1', borderRadius: 24, overflow: 'hidden', position: 'relative', background: 'linear-gradient(145deg, #f5f5f3, #ebebe9)', marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'box-shadow 0.3s' }}>
+                    <s.icon size={48} color="#1A1A2E" style={{ opacity: 0.1, transition: 'opacity 0.3s, transform 0.3s' }} />
                     <span style={{ position: 'absolute', top: 20, left: 20, fontSize: 72, fontWeight: 900, color: '#1A1A2E', opacity: 0.04, letterSpacing: '-0.04em' }}>{s.step}</span>
                   </div>
                 </TiltCard>
@@ -663,7 +675,7 @@ export default function Landing() {
         <div style={{ position: 'absolute', top: '-50%', left: '-20%', width: '60%', height: '100%', borderRadius: '50%', filter: 'blur(150px)', opacity: 0.15, background: '#FF6B6B' }} />
         <div style={{ position: 'absolute', bottom: '-30%', right: '-10%', width: '40%', height: '80%', borderRadius: '50%', filter: 'blur(120px)', opacity: 0.08, background: '#C0C0C0' }} />
         <div style={{ maxWidth: 700, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
-          <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+          <motion.h2 initial={{ opacity: 0, clipPath: 'inset(100% 0 0 0)' }} whileInView={{ opacity: 1, clipPath: 'inset(0% 0 0 0)' }} viewport={{ once: true }} transition={{ duration: 0.8, ease }}
             style={{ fontSize: 'clamp(36px, 6vw, 64px)', fontFamily: "'Space Grotesk', 'Inter', sans-serif", fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 0.95, color: '#fff', marginBottom: 24 }}>
             Ready to scale?
           </motion.h2>
@@ -671,7 +683,7 @@ export default function Landing() {
             Your AI team is waiting. Start with a free task today.
           </motion.p>
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            <Link to="/auth/signup" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '16px 32px', borderRadius: 100, background: '#FF6B6B', color: '#fff', fontSize: 15, fontWeight: 600, textDecoration: 'none', boxShadow: '0 8px 30px rgba(255,107,107,0.3)' }}>
+            <Link to="/auth/signup" className="btn-press hero-cta-glow" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '16px 32px', borderRadius: 100, background: '#FF6B6B', color: '#fff', fontSize: 15, fontWeight: 600, textDecoration: 'none', boxShadow: '0 8px 30px rgba(255,107,107,0.3)', transition: 'box-shadow 0.3s, transform 0.15s' }}>
               Get started free <ArrowRight size={16} />
             </Link>
           </motion.div>
