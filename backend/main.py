@@ -10,6 +10,9 @@ from contextlib import asynccontextmanager
 from api.routes import tasks, agents, qa, billing, feedback, dashboard, client_portal, internal_agents
 from websocket import router as ws_router
 from scheduler import scheduler
+from pipeline import pipeline
+from agents.orchestrator import orchestrator
+from validation import error_handler, AppError
 from agents.handlers import (
     generate_daily_digest,
     process_monthly_billing,
@@ -35,6 +38,7 @@ async def lifespan(app: FastAPI):
     import asyncio
     scheduler_task = asyncio.create_task(scheduler.start(poll_interval=60))
     print(f"🕐 Scheduler started with {len(scheduler.agents)} agents")
+    print("✅ My-Agentcy backend ready")
 
     yield
 
@@ -45,14 +49,17 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="My-Agentcy API",
     description="AI Workforce as a Service — Agent teams that deliver reviewed work",
-    version="0.1.0",
+    version="0.2.0",
     lifespan=lifespan,
 )
+
+# Error handler
+app.add_exception_handler(Exception, error_handler)
 
 # CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "https://*.vercel.app"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -72,4 +79,22 @@ app.include_router(ws_router, tags=["WebSocket"])
 
 @app.get("/health")
 async def health():
-    return {"status": "ok", "service": "my-agentcy"}
+    """Health check endpoint."""
+    return {
+        "status": "ok",
+        "service": "my-agentcy",
+        "version": "0.2.0",
+        "pipeline": pipeline.status(),
+        "scheduler": {"running": scheduler._running, "agents": len(scheduler.agents)},
+        "orchestrator": orchestrator.status(),
+    }
+
+
+@app.get("/status")
+async def detailed_status():
+    """Detailed system status."""
+    return {
+        "pipeline": pipeline.status(),
+        "scheduler": scheduler.status(),
+        "orchestrator": orchestrator.status(),
+    }
