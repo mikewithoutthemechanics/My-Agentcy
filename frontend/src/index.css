@@ -1,80 +1,74 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --color-background: #0f0f1a;
-    --color-surface: #1a1a2e;
-    --color-surface-light: #232340;
-    --color-surface-lighter: #2a2a4a;
-    --color-accent: #c0c0c0;
-    --color-accent-bright: #e0e0e0;
-    --color-accent-dim: #808080;
-    --color-success: #4ade80;
-    --color-warning: #fbbf24;
-    --color-error: #f87171;
-    --color-info: #60a5fa;
-  }
-
-  * {
-    @apply border-surface-lighter;
-  }
-
-  body {
-    @apply bg-background text-white font-sans antialiased;
-  }
-
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-
-  ::-webkit-scrollbar-track {
-    @apply bg-surface;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    @apply bg-surface-lighter rounded-full;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    @apply bg-accent-dim;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-@layer components {
-  .card {
-    @apply bg-surface rounded-xl border border-surface-lighter p-6;
-  }
+html {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-  .card-hover {
-    @apply bg-surface rounded-xl border border-surface-lighter p-6 transition-all duration-200;
-  }
+body {
+  background: #0D0D12;
+  color: #fff;
+}
 
-  .card-hover:hover {
-    @apply border-accent-dim shadow-lg shadow-black/20;
-  }
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.08);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.12);
+}
 
-  .input {
-    @apply w-full px-4 py-2.5 bg-surface-light border border-surface-lighter rounded-lg text-white placeholder:text-accent-dim focus:outline-none focus:border-accent transition-colors;
-  }
+/* Selection */
+::selection {
+  background: rgba(192, 192, 192, 0.2);
+  color: #fff;
+}
 
-  .stat-value {
-    @apply text-3xl font-bold text-white;
-  }
+/* Smooth transitions for links */
+a {
+  transition: color 0.15s ease;
+}
 
-  .stat-label {
-    @apply text-sm text-accent-dim mt-1;
-  }
+/* Chart tooltip animation */
+.recharts-tooltip-wrapper {
+  animation: fadeIn 0.15s ease;
+}
 
-  .page-title {
-    @apply text-2xl font-bold text-white;
-  }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-  .section-title {
-    @apply text-lg font-semibold text-white;
-  }
+/* Pulse glow for active elements */
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.2); }
+  50% { box-shadow: 0 0 0 6px rgba(74, 222, 128, 0); }
+}
+
+/* Focus styles */
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: rgba(192, 192, 192, 0.3) !important;
+}
+
+/* Custom animations */
+.animate-pulse-slow {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
