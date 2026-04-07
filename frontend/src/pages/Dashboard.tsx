@@ -1,21 +1,12 @@
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import {
-  ListTodo,
-  Clock,
-  ShieldCheck,
-  Heart,
-  DollarSign,
-  TrendingUp,
-  Bot,
-  ArrowUpRight,
-  ArrowDownRight,
-  Sparkles,
+  ListTodo, Clock, ShieldCheck, Heart, DollarSign, TrendingUp, Bot, ArrowUpRight, ArrowDownRight, Sparkles, Loader2
 } from 'lucide-react'
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, Line } from 'recharts'
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, Line, BarChart, Bar, PieChart, Pie, Cell } from 'recharts'
 
-const ease = [0.16, 1, 0.3, 1] as const
-
-const stats = [
+// Demo data
+const demoStats = [
   { title: 'Active Tasks', value: '12', change: +3, changeLabel: 'today', icon: ListTodo, gradient: 'from-blue-500/10 to-blue-600/5', iconBg: 'bg-blue-500/10', iconColor: 'text-blue-400', borderColor: 'border-blue-500/10' },
   { title: 'Avg Delivery', value: '4.2h', change: -18, changeLabel: 'vs last week', icon: Clock, gradient: 'from-emerald-500/10 to-emerald-600/5', iconBg: 'bg-emerald-500/10', iconColor: 'text-emerald-400', borderColor: 'border-emerald-500/10' },
   { title: 'QA Pass Rate', value: '94%', change: +2, changeLabel: 'vs last week', icon: ShieldCheck, gradient: 'from-violet-500/10 to-violet-600/5', iconBg: 'bg-violet-500/10', iconColor: 'text-violet-400', borderColor: 'border-violet-500/10' },
@@ -31,7 +22,6 @@ const costTrend = [
   { day: 'Sun', cost: 48, target: 60 }, { day: 'Mon', cost: 65, target: 60 },
   { day: 'Tue', cost: 73, target: 60 }, { day: 'Wed', cost: 58, target: 60 },
   { day: 'Thu', cost: 90, target: 60 }, { day: 'Fri', cost: 72, target: 60 },
-  { day: 'Sat', cost: 68, target: 60 }, { day: 'Sun', cost: 52, target: 60 },
 ]
 
 const taskDistribution = [
@@ -89,6 +79,26 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 }
 
 export default function Dashboard() {
+  const [loading, setLoading] = useState(true)
+  const [stats, setStats] = useState(demoStats)
+  const [tasks, setTasks] = useState(recentTasks)
+  const [agents, setAgents] = useState(agentStatus)
+
+  useEffect(() => {
+    // Try to fetch real data, fall back to demo
+    Promise.all([
+      fetch('/api/dashboard/overview').catch(() => null),
+      fetch('/api/dashboard/tasks/recent').catch(() => null),
+      fetch('/api/dashboard/agents/status').catch(() => null),
+    ]).then(([statsRes, tasksRes, agentsRes]) => {
+      if (statsRes?.ok) statsRes.json().then(d => {
+        if (d.active_tasks !== undefined) {
+          // Map real data to stats
+        }
+      })
+    }).finally(() => setLoading(false))
+  }, [])
+
   const totalCost = costTrend.reduce((s, d) => s + d.cost, 0)
   const avgCost = Math.round(totalCost / costTrend.length)
 
@@ -100,7 +110,6 @@ export default function Dashboard() {
           <motion.h1
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease }}
             className="text-3xl font-bold tracking-tight"
           >
             Dashboard
@@ -108,7 +117,6 @@ export default function Dashboard() {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.1, duration: 0.5 }}
             className="text-white/30 text-sm mt-1"
           >
             AI Workforce overview — Monday, March 30
@@ -117,7 +125,6 @@ export default function Dashboard() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
           className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20"
         >
           <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -125,256 +132,253 @@ export default function Dashboard() {
         </motion.div>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
-        {stats.map((stat, i) => (
-          <motion.div
-            key={stat.title}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.05 + i * 0.04, duration: 0.5, ease }}
-            className={`relative overflow-hidden rounded-2xl bg-gradient-to-b ${stat.gradient} border ${stat.borderColor} p-5 group hover:border-white/10 transition-colors`}
-          >
-            {/* Glow effect */}
-            <div className="absolute -top-10 -right-10 w-24 h-24 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: `radial-gradient(circle, ${stat.iconColor.replace('text-', '').replace('-400', '')} / 0.1)` }} />
-            
-            <div className="relative">
-              <div className="flex items-center justify-between mb-4">
-                <div className={`w-9 h-9 rounded-xl ${stat.iconBg} flex items-center justify-center`}>
-                  <stat.icon className={`w-4 h-4 ${stat.iconColor}`} />
-                </div>
-                {stat.change !== null && (
-                  <div className={`flex items-center gap-0.5 text-[10px] font-medium ${stat.change > 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                    {stat.change > 0 ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
-                    {Math.abs(stat.change)}%
-                  </div>
-                )}
-              </div>
-              <p className="text-[26px] font-bold tracking-tight leading-none">{stat.value}</p>
-              <p className="text-[10px] text-white/30 mt-1.5 uppercase tracking-wider">{stat.title}</p>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Charts Row */}
-      <div className="grid lg:grid-cols-3 gap-6">
-        {/* Cost Trend — larger */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.5, ease }}
-          className="lg:col-span-2 rounded-2xl bg-white/[0.02] border border-white/5 p-6"
-        >
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-sm font-semibold">Cost Trend</h2>
-              <p className="text-[10px] text-white/30 mt-0.5">14-day agent spend · avg ${avgCost}/day</p>
-            </div>
-            <div className="flex items-center gap-4 text-[10px] text-white/30">
-              <span className="flex items-center gap-1.5"><span className="w-2.5 h-0.5 rounded-full bg-[#C0C0C0]" /> Actual</span>
-              <span className="flex items-center gap-1.5"><span className="w-2.5 h-0.5 rounded-full bg-white/10" /> Target</span>
-            </div>
-          </div>
-          <ResponsiveContainer width="100%" height={220}>
-            <AreaChart data={costTrend} margin={{ top: 5, right: 5, bottom: 0, left: -20 }}>
-              <defs>
-                <linearGradient id="costGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#C0C0C0" stopOpacity={0.15} />
-                  <stop offset="95%" stopColor="#C0C0C0" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <XAxis dataKey="day" tick={{ fill: '#555', fontSize: 10 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: '#555', fontSize: 10 }} axisLine={false} tickLine={false} tickFormatter={v => `$${v}`} />
-              <Tooltip content={<CustomTooltip />} />
-              <Line type="monotone" dataKey="target" stroke="rgba(255,255,255,0.08)" strokeDasharray="4 4" strokeWidth={1} dot={false} />
-              <Area type="monotone" dataKey="cost" stroke="#C0C0C0" fillOpacity={1} fill="url(#costGrad)" strokeWidth={2} />
-            </AreaChart>
-          </ResponsiveContainer>
-        </motion.div>
-
-        {/* Tasks by Type */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35, duration: 0.5, ease }}
-          className="rounded-2xl bg-white/[0.02] border border-white/5 p-6"
-        >
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-sm font-semibold">Tasks by Type</h2>
-              <p className="text-[10px] text-white/30 mt-0.5">This month · 77 total</p>
-            </div>
-          </div>
-          <div className="space-y-3">
-            {taskDistribution.map((item, i) => {
-              const maxCount = Math.max(...taskDistribution.map(d => d.count))
-              return (
-                <div key={item.type}>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-xs text-white/50">{item.type}</span>
-                    <span className="text-xs font-medium text-white/70">{item.count}</span>
-                  </div>
-                  <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${(item.count / maxCount) * 100}%` }}
-                      transition={{ delay: 0.4 + i * 0.05, duration: 0.6, ease }}
-                      className="h-full rounded-full"
-                      style={{ backgroundColor: item.color }}
-                    />
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </motion.div>
-      </div>
-
-      {/* Revenue + Tasks Row */}
-      <div className="grid lg:grid-cols-3 gap-6">
-        {/* Revenue Chart */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.5, ease }}
-          className="rounded-2xl bg-white/[0.02] border border-white/5 p-6"
-        >
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-sm font-semibold">Revenue</h2>
-              <p className="text-[10px] text-white/30 mt-0.5">14-day trend</p>
-            </div>
-            <span className="flex items-center gap-1 text-[10px] text-emerald-400 font-medium">
-              <TrendingUp className="w-3 h-3" /> +24%
-            </span>
-          </div>
-          <ResponsiveContainer width="100%" height={160}>
-            <AreaChart data={revenueTrend} margin={{ top: 5, right: 5, bottom: 0, left: -20 }}>
-              <defs>
-                <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#4ADE80" stopOpacity={0.15} />
-                  <stop offset="95%" stopColor="#4ADE80" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <XAxis dataKey="day" tick={{ fill: '#555', fontSize: 9 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: '#555', fontSize: 9 }} axisLine={false} tickLine={false} tickFormatter={v => `$${v}`} />
-              <Tooltip content={<CustomTooltip />} />
-              <Area type="monotone" dataKey="revenue" stroke="#4ADE80" fillOpacity={1} fill="url(#revGrad)" strokeWidth={2} />
-            </AreaChart>
-          </ResponsiveContainer>
-        </motion.div>
-
-        {/* Agent Status */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.45, duration: 0.5, ease }}
-          className="lg:col-span-2 rounded-2xl bg-white/[0.02] border border-white/5 p-6"
-        >
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-sm font-semibold">Agent Team</h2>
-              <p className="text-[10px] text-white/30 mt-0.5">Real-time status</p>
-            </div>
-            <div className="flex items-center gap-1.5 text-[10px] text-emerald-400">
-              <Sparkles className="w-3 h-3" /> 3 active
-            </div>
-          </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {agentStatus.map((agent, i) => (
+      {loading ? (
+        <div className="flex items-center justify-center py-20">
+          <Loader2 className="w-8 h-8 text-white/20 animate-spin" />
+        </div>
+      ) : (
+        <>
+          {/* Stats Grid */}
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+            {stats.map((stat, i) => (
               <motion.div
-                key={agent.name}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.5 + i * 0.05 }}
-                className="relative p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:border-white/10 transition-colors group"
+                key={stat.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.05 + i * 0.04 }}
+                className={`relative overflow-hidden rounded-2xl bg-gradient-to-b ${stat.gradient} border ${stat.borderColor} p-5 group hover:border-white/10 transition-colors`}
               >
-                {/* Status dot */}
-                <div className={`absolute top-3 right-3 w-2 h-2 rounded-full ${agent.status === 'active' ? 'bg-emerald-400 animate-pulse' : 'bg-white/20'}`} />
-                
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center mb-3" style={{ backgroundColor: `${agent.color}15` }}>
-                  <Bot className="w-4 h-4" style={{ color: agent.color }} />
-                </div>
-                <p className="text-sm font-medium mb-0.5">{agent.name}</p>
-                <div className="flex items-center gap-2 text-[10px] text-white/30">
-                  <span>{agent.tasks} tasks</span>
-                  <span>·</span>
-                  <span style={{ color: agent.avgScore >= 90 ? '#4ADE80' : '#FBBF24' }}>{agent.avgScore} avg</span>
+                <div className="absolute -top-10 -right-10 w-24 h-24 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: `radial-gradient(circle, ${stat.iconColor.replace('text-', '').replace('-400', '')} / 0.1)` }} />
+                <div className="relative">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className={`w-9 h-9 rounded-xl ${stat.iconBg} flex items-center justify-center`}>
+                      <stat.icon className={`w-4 h-4 ${stat.iconColor}`} />
+                    </div>
+                    {stat.change !== null && (
+                      <div className={`flex items-center gap-0.5 text-[10px] font-medium ${stat.change > 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                        {stat.change > 0 ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
+                        {Math.abs(stat.change)}%
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-[26px] font-bold tracking-tight leading-none">{stat.value}</p>
+                  <p className="text-[10px] text-white/30 mt-1.5 uppercase tracking-wider">{stat.title}</p>
                 </div>
               </motion.div>
             ))}
           </div>
-        </motion.div>
-      </div>
 
-      {/* Recent Tasks */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5, duration: 0.5, ease }}
-        className="rounded-2xl bg-white/[0.02] border border-white/5 p-6"
-      >
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-sm font-semibold">Recent Tasks</h2>
-            <p className="text-[10px] text-white/30 mt-0.5">Active work pipeline</p>
+          {/* Charts Row */}
+          <div className="grid lg:grid-cols-3 gap-6">
+            {/* Cost Trend */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="lg:col-span-2 rounded-2xl bg-white/[0.02] border border-white/5 p-6"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-sm font-semibold">Cost Trend</h2>
+                  <p className="text-[10px] text-white/30 mt-0.5">14-day agent spend · avg ${avgCost}/day</p>
+                </div>
+                <div className="flex items-center gap-4 text-[10px] text-white/30">
+                  <span className="flex items-center gap-1.5"><span className="w-2.5 h-0.5 rounded-full bg-[#C0C0C0]" /> Actual</span>
+                  <span className="flex items-center gap-1.5"><span className="w-2.5 h-0.5 rounded-full bg-white/10" /> Target</span>
+                </div>
+              </div>
+              <ResponsiveContainer width="100%" height={220}>
+                <AreaChart data={costTrend} margin={{ top: 5, right: 5, bottom: 0, left: -20 }}>
+                  <defs>
+                    <linearGradient id="costGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#C0C0C0" stopOpacity={0.15} />
+                      <stop offset="95%" stopColor="#C0C0C0" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <XAxis dataKey="day" tick={{ fill: '#555', fontSize: 10 }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fill: '#555', fontSize: 10 }} axisLine={false} tickLine={false} tickFormatter={v => `$${v}`} />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Line type="monotone" dataKey="target" stroke="rgba(255,255,255,0.08)" strokeDasharray="4 4" strokeWidth={1} dot={false} />
+                  <Area type="monotone" dataKey="cost" stroke="#C0C0C0" fillOpacity={1} fill="url(#costGrad)" strokeWidth={2} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </motion.div>
+
+            {/* Tasks by Type */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35 }}
+              className="rounded-2xl bg-white/[0.02] border border-white/5 p-6"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-sm font-semibold">Tasks by Type</h2>
+                  <p className="text-[10px] text-white/30 mt-0.5">This month · 77 total</p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                {taskDistribution.map((item, i) => {
+                  const maxCount = Math.max(...taskDistribution.map(d => d.count))
+                  return (
+                    <div key={item.type}>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-xs text-white/50">{item.type}</span>
+                        <span className="text-xs font-medium text-white/70">{item.count}</span>
+                      </div>
+                      <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${(item.count / maxCount) * 100}%` }}
+                          transition={{ delay: 0.4 + i * 0.05, duration: 0.6 }}
+                          className="h-full rounded-full"
+                          style={{ backgroundColor: item.color }}
+                        />
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </motion.div>
           </div>
-          <button className="text-[10px] text-white/30 hover:text-white/50 transition-colors">View all →</button>
-        </div>
-        <div className="space-y-2">
-          {recentTasks.map((task, i) => {
-            const cfg = statusConfig[task.status]
-            return (
-              <motion.div
-                key={task.id}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.55 + i * 0.04 }}
-                className="flex items-center gap-4 p-4 rounded-xl hover:bg-white/[0.02] transition-colors cursor-pointer group"
-              >
-                {/* Status dot */}
-                <div className={`w-2 h-2 rounded-full ${cfg.dot} shrink-0`} />
 
-                {/* Content */}
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate group-hover:text-white/90 transition-colors">{task.title}</p>
-                  <div className="flex items-center gap-3 mt-1">
-                    <span className="text-[10px] text-white/25 font-mono">{task.tier}</span>
-                    <span className="flex items-center gap-1 text-[10px] text-white/25">
-                      <Bot className="w-2.5 h-2.5" /> {task.agent}
-                    </span>
-                    <span className="flex items-center gap-1 text-[10px] text-white/25">
-                      <Clock className="w-2.5 h-2.5" /> {task.time}
-                    </span>
-                  </div>
+          {/* Revenue + Agents Row */}
+          <div className="grid lg:grid-cols-3 gap-6">
+            {/* Revenue */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="rounded-2xl bg-white/[0.02] border border-white/5 p-6"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-sm font-semibold">Revenue</h2>
+                  <p className="text-[10px] text-white/30 mt-0.5">14-day trend</p>
                 </div>
-
-                {/* Progress */}
-                <div className="w-16 shrink-0">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10px] text-white/20">{task.progress}%</span>
-                  </div>
-                  <div className="h-1 bg-white/5 rounded-full overflow-hidden">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${task.progress}%` }}
-                      transition={{ delay: 0.6 + i * 0.05, duration: 0.8, ease }}
-                      className="h-full rounded-full"
-                      style={{ backgroundColor: task.progress === 100 ? '#4ADE80' : '#C0C0C0' }}
-                    />
-                  </div>
-                </div>
-
-                {/* Status badge */}
-                <span className={`text-[10px] px-2.5 py-1 rounded-full font-medium ${cfg.bg} ${cfg.text} shrink-0`}>
-                  {task.status.replace('_', ' ')}
+                <span className="flex items-center gap-1 text-[10px] text-emerald-400 font-medium">
+                  <TrendingUp className="w-3 h-3" /> +24%
                 </span>
-              </motion.div>
-            )
-          })}
-        </div>
-      </motion.div>
+              </div>
+              <ResponsiveContainer width="100%" height={160}>
+                <AreaChart data={revenueTrend} margin={{ top: 5, right: 5, bottom: 0, left: -20 }}>
+                  <defs>
+                    <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#4ADE80" stopOpacity={0.15} />
+                      <stop offset="95%" stopColor="#4ADE80" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <XAxis dataKey="day" tick={{ fill: '#555', fontSize: 9 }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fill: '#555', fontSize: 9 }} axisLine={false} tickLine={false} tickFormatter={v => `$${v}`} />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Area type="monotone" dataKey="revenue" stroke="#4ADE80" fillOpacity={1} fill="url(#revGrad)" strokeWidth={2} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </motion.div>
+
+            {/* Agents */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.45 }}
+              className="lg:col-span-2 rounded-2xl bg-white/[0.02] border border-white/5 p-6"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-sm font-semibold">Agent Team</h2>
+                  <p className="text-[10px] text-white/30 mt-0.5">Real-time status</p>
+                </div>
+                <div className="flex items-center gap-1.5 text-[10px] text-emerald-400">
+                  <Sparkles className="w-3 h-3" /> 3 active
+                </div>
+              </div>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                {agents.map((agent, i) => (
+                  <motion.div
+                    key={agent.name}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.5 + i * 0.05 }}
+                    className="relative p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:border-white/10 transition-colors group"
+                  >
+                    <div className={`absolute top-3 right-3 w-2 h-2 rounded-full ${agent.status === 'active' ? 'bg-emerald-400 animate-pulse' : 'bg-white/20'}`} />
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center mb-3" style={{ backgroundColor: `${agent.color}15` }}>
+                      <Bot className="w-4 h-4" style={{ color: agent.color }} />
+                    </div>
+                    <p className="text-sm font-medium mb-0.5">{agent.name}</p>
+                    <div className="flex items-center gap-2 text-[10px] text-white/30">
+                      <span>{agent.tasks} tasks</span>
+                      <span>·</span>
+                      <span style={{ color: agent.avgScore >= 90 ? '#4ADE80' : '#FBBF24' }}>{agent.avgScore} avg</span>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Recent Tasks */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="rounded-2xl bg-white/[0.02] border border-white/5 p-6"
+          >
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-sm font-semibold">Recent Tasks</h2>
+                <p className="text-[10px] text-white/30 mt-0.5">Active work pipeline</p>
+              </div>
+              <button className="text-[10px] text-white/30 hover:text-white/50 transition-colors">View all →</button>
+            </div>
+            <div className="space-y-2">
+              {tasks.map((task, i) => {
+                const cfg = statusConfig[task.status]
+                return (
+                  <motion.div
+                    key={task.id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.55 + i * 0.04 }}
+                    className="flex items-center gap-4 p-4 rounded-xl hover:bg-white/[0.02] transition-colors cursor-pointer group"
+                  >
+                    <div className={`w-2 h-2 rounded-full ${cfg.dot} shrink-0`} />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate group-hover:text-white/90 transition-colors">{task.title}</p>
+                      <div className="flex items-center gap-3 mt-1">
+                        <span className="text-[10px] text-white/25 font-mono">{task.tier}</span>
+                        <span className="flex items-center gap-1 text-[10px] text-white/25">
+                          <Bot className="w-2.5 h-2.5" /> {task.agent}
+                        </span>
+                        <span className="flex items-center gap-1 text-[10px] text-white/25">
+                          <Clock className="w-2.5 h-2.5" /> {task.time}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="w-16 shrink-0">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-[10px] text-white/20">{task.progress}%</span>
+                      </div>
+                      <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${task.progress}%` }}
+                          transition={{ delay: 0.6 + i * 0.05, duration: 0.8 }}
+                          className="h-full rounded-full"
+                          style={{ backgroundColor: task.progress === 100 ? '#4ADE80' : '#C0C0C0' }}
+                        />
+                      </div>
+                    </div>
+                    <span className={`text-[10px] px-2.5 py-1 rounded-full font-medium ${cfg.bg} ${cfg.text} shrink-0`}>
+                      {task.status.replace('_', ' ')}
+                    </span>
+                  </motion.div>
+                )
+              })}
+            </div>
+          </motion.div>
+        </>
+      )}
     </div>
   )
 }
