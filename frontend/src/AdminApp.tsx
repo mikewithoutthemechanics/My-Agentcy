@@ -9,6 +9,7 @@ import {
   Settings,
   ChevronRight,
   Zap,
+  Package,
 } from 'lucide-react'
 import Dashboard from './pages/Dashboard'
 import Tasks from './pages/Tasks'
@@ -16,6 +17,7 @@ import QAReview from './pages/QAReview'
 import Agents from './pages/Agents'
 import Billing from './pages/Billing'
 import SettingsPage from './pages/Settings'
+import Bundles from './pages/Bundles'
 import './index.css'
 
 const navItems = [
@@ -23,6 +25,7 @@ const navItems = [
   { to: '/app/tasks', icon: ListTodo, label: 'Tasks' },
   { to: '/app/qa', icon: ShieldCheck, label: 'QA Review' },
   { to: '/app/agents', icon: Bot, label: 'Agents' },
+  { to: '/app/bundles', icon: Package, label: 'Bundles' },
   { to: '/app/billing', icon: CreditCard, label: 'Billing' },
   { to: '/app/settings', icon: Settings, label: 'Settings' },
 ]
@@ -84,6 +87,7 @@ export default function AdminApp() {
             <Route path="tasks" element={<Tasks />} />
             <Route path="qa" element={<QAReview />} />
             <Route path="agents" element={<Agents />} />
+            <Route path="bundles" element={<Bundles />} />
             <Route path="billing" element={<Billing />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="*" element={<Navigate to="dashboard" replace />} />
