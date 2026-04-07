@@ -470,6 +470,83 @@ def EscalationTool(reason: str, severity: str = "medium", details: str = "") -> 
 
 
 # ─────────────────────────────────────────────────────────────────────
+# Romy Backend Executor
+# ─────────────────────────────────────────────────────────────────────
+
+import os
+import urllib.request
+import json
+
+ROMY_BACKEND_URL = os.environ.get("ROMY_BACKEND_URL", "https://romy-backend.vercel.app")
+
+
+@tool("romy_execute")
+def RomyExecuteTool(agent_id: str, task: str, context: dict = None) -> str:
+    """Execute a task using the Romy Backend agents (54+ working agents).
+
+    Use this to delegate tasks to specialized Romy agents across departments:
+    - Executive (CEO, CFO, CTO, COO, CMO)
+    - Sales, Customer Success, Finance
+    - Research, Design, Engineering
+    - Marketing, Product, QA, Operations
+
+    Args:
+        agent_id: The Romy agent ID (e.g., 'ceo', 'sales_rep', 'researcher')
+        task: The task description for the agent to perform
+        context: Optional context dict with additional parameters
+    """
+    try:
+        url = f"{ROMY_BACKEND_URL}/execute"
+        
+        # Backend expects query params: agent_type, task, input_data
+        import urllib.parse
+        params = urllib.parse.urlencode({
+            "agent_type": agent_id,
+            "task": task,
+            "input_data": json.dumps(context or {})
+        })
+        full_url = f"{url}?{params}"
+        
+        req = urllib.request.Request(
+            full_url,
+            headers={"User-Agent": "My-Agentcy/1.0"},
+            method="POST"
+        )
+        
+        with urllib.request.urlopen(req, timeout=120) as resp:
+            result = json.loads(resp.read().decode("utf-8"))
+            return json.dumps(result, indent=2)
+            
+    except urllib.error.HTTPError as e:
+        return json.dumps({
+            "error": f"HTTP Error {e.code}",
+            "message": e.read().decode("utf-8") if e.fp else str(e)
+        })
+    except Exception as exc:
+        return json.dumps({"error": str(exc), "agent_id": agent_id})
+
+
+@tool("romy_list_agents")
+def RomyListAgentsTool(department: str = None) -> str:
+    """List available Romy backend agents, optionally filtered by department.
+
+    Args:
+        department: Optional filter (e.g., 'Sales', 'Engineering', 'Research')
+    """
+    try:
+        url = f"{ROMY_BACKEND_URL}/agents"
+        if department:
+            url = f"{ROMY_BACKEND_URL}/agents/{department.lower()}"
+            
+        req = urllib.request.Request(url, headers={"User-Agent": "My-Agentcy/1.0"})
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            agents = json.loads(resp.read().decode("utf-8"))
+            return json.dumps(agents, indent=2)
+    except Exception as exc:
+        return json.dumps({"error": str(exc)})
+
+
+# ─────────────────────────────────────────────────────────────────────
 # Exports
 # ─────────────────────────────────────────────────────────────────────
 
@@ -484,6 +561,8 @@ ALL_TOOLS = [
     StatusUpdateTool,
     NotificationTool,
     EscalationTool,
+    RomyExecuteTool,
+    RomyListAgentsTool,
 ]
 
 __all__ = [
@@ -497,5 +576,7 @@ __all__ = [
     "StatusUpdateTool",
     "NotificationTool",
     "EscalationTool",
+    "RomyExecuteTool",
+    "RomyListAgentsTool",
     "ALL_TOOLS",
 ]
