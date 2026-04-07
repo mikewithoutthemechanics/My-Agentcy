@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Plus, Search, ChevronRight, Clock, Bot, Loader2 } from 'lucide-react'
+import { Plus, Search, Clock, Bot, Loader2 } from 'lucide-react'
 
 const statusColors: Record<string, string> = {
   queued: 'bg-white/10 text-white/50',
@@ -9,14 +9,6 @@ const statusColors: Record<string, string> = {
   human_review: 'bg-purple-500/10 text-purple-400',
   delivered: 'bg-green-500/10 text-green-400',
   completed: 'bg-green-500/10 text-green-400',
-}
-
-const priorityColors: Record<number, string> = {
-  1: 'text-red-400',
-  2: 'text-orange-400',
-  3: 'text-white/40',
-  4: 'text-white/20',
-  5: 'text-white/10',
 }
 
 // Fallback data if API unavailable
@@ -52,7 +44,6 @@ export default function Tasks() {
     } catch (e) {
       console.log('Using fallback data')
     }
-    // Fallback to static data
     setTasks(fallbackTasks)
     setLoading(false)
   }
@@ -65,7 +56,6 @@ export default function Tasks() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Tasks</h1>
@@ -76,7 +66,6 @@ export default function Tasks() {
         </button>
       </div>
 
-      {/* Filters */}
       <div className="flex items-center gap-4">
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
@@ -103,7 +92,6 @@ export default function Tasks() {
         </div>
       </div>
 
-      {/* Tasks List */}
       {loading ? (
         <div className="flex items-center justify-center py-20">
           <Loader2 className="w-6 h-6 text-white/20 animate-spin" />

@@ -1,7 +1,7 @@
-"""Bundles page - Client bundle selection and management."""
+/** Bundles page - Client bundle selection and management. */
 
-import { useState, useEffect } from 'react'
-import { Zap, Check, X, ArrowRight, Users, Briefcase, Code, Headphones, Crown, Palette, Search } from 'lucide-react'
+import { useState } from 'react'
+import { Zap, Users, Briefcase, Code, Headphones, Crown, Palette, Search } from 'lucide-react'
 
 const BUNDLES = [
   {

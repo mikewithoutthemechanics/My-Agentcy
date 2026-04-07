@@ -1,4 +1,4 @@
-"""Client Bundles page - Client-facing bundle selection."""
+/** Client Bundles page - Client-facing bundle selection. */
 
 import { useState } from 'react'
 import { Zap, Check, Users, Briefcase, Code, Headphones, Crown, Palette, Search, Play } from 'lucide-react'
@@ -53,7 +53,7 @@ export default function ClientBundles() {
               }`}
               style={{ 
                 background: selected === b.id ? `${b.color}15` : 'white',
-                ringColor: b.color 
+                borderColor: selected === b.id ? b.color : "transparent" 
               }}
             >
               <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-3`} style={{ background: b.color }}>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { ShieldCheck, Clock, ThumbsUp, ThumbsDown, AlertCircle, Loader2 } from 'lucide-react'
+import { Clock, ThumbsUp, ThumbsDown, Loader2 } from 'lucide-react'
 
 const fallbackReviews = [
   { id: '1', task_title: 'Q1 Market Analysis', tier: 'T1', status: 'pending', score: 85, issues: 2, submitted_by: 'Analyst', time: '2h ago' },
